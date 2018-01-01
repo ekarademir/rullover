@@ -166,20 +166,20 @@ PrintBoard()
   // Column numbers
   cout << "      Col ";
   for (int j = 0; j < board_width; j++) {
-    printf("%3d ", j);
+    printf(" %3d ", j);
   }
   cout << endl;
 
   cout << "   Target|";
   for (int j = 0; j < board_width; j++) {
-    printf("%3d ", sums[board_width + j]);
+    printf(" %3d ", sums[board_width + j]);
   }
   cout << endl;
   
   // Upper dashes
   cout << "Row|-----|";
   for (int j = 0; j < board_width; j++) {
-    cout << "----";
+    cout << "-----";
   }
   cout << endl;
 
@@ -212,7 +212,8 @@ PrintBoard()
       if (flag & EXCLUDE){ cout << "-";}
       else {cout << " ";}
 
-      printf("%2d ", current);
+      if (flag & MARKED){ printf("[%2d]", current);}
+      else {printf(" %2d ", current);}
     }
     printf("| %3d", row_sum);
     cout << endl;
@@ -220,13 +221,13 @@ PrintBoard()
 
   cout << "          -";
   for (int j = 0; j < board_width; j++) {
-    cout << "----";
+    cout << "-----";
   }
   cout << endl;
 
   cout << "         ";
   for (int j = 0; j < board_width; j++) {
-    printf("%4d", col_sums[j]);
+    printf(" %4d", col_sums[j]);
   }
   cout << endl;
 
@@ -237,49 +238,21 @@ bool CheckCommand(string cmd, string input) {
   return cmd.compare(input) == 0;
 }
 
-void CheckTile(string cmd) {
-  int dash_position = cmd.find("-");
-
-  if (dash_position < cmd.size()) {
-    string first = cmd.substr(0, dash_position);
-    string second = cmd.substr(dash_position + 1, cmd.size());
-
-    cout << endl;
-
-    int row;
-    int col;
-    try {
-      row = stod(first);
-      col = stod(second);
-    } catch (const exception& x) {
-      cout << "Invalid row or col number" << endl;
-      cout << endl << endl;
-      return;
-    }
-
-    if (abs(row) < board_height && abs(col) < board_width) {
-      short int address = row * board_width + col;
-      tiles[address] ^= EXCLUDE;
-
-      cout << "Toggled row: " << row;
-      cout << " and col: " << col;
-      cout << tiles[address] << endl;
-      cout << endl << endl;
-
-    }
-    else {
-      cout << "Invalid row or col number" << endl;
-      cout << endl << endl;
-      return;
-    }
-  }
-}
-
 void MarkTile(string cmd) {
+  int mark_position = cmd.find("*");
+  short int xor_operand;
+
+  if (mark_position > cmd.size()) {
+    mark_position = cmd.find("+");
+    xor_operand = EXCLUDE;
+  } else {
+    xor_operand = MARKED;
+  }
+
   int dash_position = cmd.find("-");
 
-  if (dash_position < cmd.size()) {
-    string first = cmd.substr(0, dash_position);
+  if (dash_position < cmd.size() && mark_position < cmd.size()) {
+    string first = cmd.substr(mark_position + 1, dash_position);
     string second = cmd.substr(dash_position + 1, cmd.size());
 
     cout << endl;
@@ -297,11 +270,10 @@ void MarkTile(string cmd) {
 
     if (abs(row) < board_height && abs(col) < board_width) {
       short int address = row * board_width + col;
-      tiles[address] ^= MARKED;
+      tiles[address] ^= xor_operand;
 
       cout << "Toggled row: " << row;
       cout << " and col: " << col;
-      cout << tiles[address] << endl;
       cout << endl << endl;
 
     }
@@ -370,7 +342,7 @@ main()
       loop = false;
     }
 
-    CheckTile(input);
+    MarkTile(input);
     
     if(CheckGame()) {
       cout << endl << endl;
