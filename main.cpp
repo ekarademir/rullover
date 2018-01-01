@@ -204,7 +204,7 @@ PrintBoard()
       flag = tiles[index];
       not_included = mask[index];
       
-      if (tiles[index] & INCLUDE) {
+      if (!(tiles[index] & EXCLUDE)) {
         col_sums[j] += current;
         row_sum += current;
       }
