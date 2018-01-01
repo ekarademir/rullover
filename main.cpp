@@ -318,7 +318,7 @@ main()
   string prompt = ">>> ";
   string input;
 
-  cout << "Rullo" << endl;
+  cout << "Rullover" << endl;
 
   srand(42);
 
