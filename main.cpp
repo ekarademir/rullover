@@ -5,8 +5,9 @@
 using namespace std;
 
 // Markings
-const short int INCLUDE = 0;
-const short int EXCLUDE = 1;
+const short int INCLUDE = 0000;
+const short int EXCLUDE = 0010;
+const short int MARKED = 0100;
 
 short int board_width, board_height, limit_lower, limit_upper;
 short int *board;
@@ -43,7 +44,7 @@ IntegerInput(string question, int def=0)
 void GetLimits()
 {
   string t;
-  int llow = 1, lupp = 15;
+  int llow = 2, lupp = 19;
 
   string question = "Numbers range - inclusive, less than or 100 - ? [";
   question += to_string(llow);
@@ -124,10 +125,10 @@ FillBoard()
 void
 SetBoard()
 {
-  board_width = IntegerInput("Board width? [10] >> ", 10);
+  board_width = IntegerInput("Board width? [6] >> ", 6);
   board_width = abs(board_width);
 
-  board_height = IntegerInput("Board height? [10] >> ", 10);
+  board_height = IntegerInput("Board height? [6] >> ", 6);
   board_height = abs(board_height);
 
   board = new short int[board_height * board_width];
@@ -141,7 +142,7 @@ SetBoard()
 
   for (int i = 0; i < board_height * board_width; i++) {
     board[i] = 0;
-    tiles[i] = 0;
+    tiles[i] = INCLUDE;
     mask[i] = 0;
   }
   
@@ -203,12 +204,12 @@ PrintBoard()
       flag = tiles[index];
       not_included = mask[index];
       
-      if (tiles[index] == INCLUDE) {
+      if (tiles[index] & INCLUDE) {
         col_sums[j] += current;
         row_sum += current;
       }
 
-      if (flag == EXCLUDE){ cout << "-";}
+      if (flag & EXCLUDE){ cout << "-";}
       else {cout << " ";}
 
       printf("%2d ", current);
@@ -258,15 +259,49 @@ void CheckTile(string cmd) {
 
     if (abs(row) < board_height && abs(col) < board_width) {
       short int address = row * board_width + col;
-      if (tiles[address] == EXCLUDE) {
-        tiles[address] = INCLUDE;
-      }
-      else if (tiles[address] == INCLUDE) {
-        tiles[address] = EXCLUDE;
-      }
+      tiles[address] ^= EXCLUDE;
 
       cout << "Toggled row: " << row;
       cout << " and col: " << col;
+      cout << tiles[address] << endl;
+      cout << endl << endl;
+
+    }
+    else {
+      cout << "Invalid row or col number" << endl;
+      cout << endl << endl;
+      return;
+    }
+  }
+}
+
+void MarkTile(string cmd) {
+  int dash_position = cmd.find("-");
+
+  if (dash_position < cmd.size()) {
+    string first = cmd.substr(0, dash_position);
+    string second = cmd.substr(dash_position + 1, cmd.size());
+
+    cout << endl;
+
+    int row;
+    int col;
+    try {
+      row = stod(first);
+      col = stod(second);
+    } catch (const exception& x) {
+      cout << "Invalid row or col number" << endl;
+      cout << endl << endl;
+      return;
+    }
+
+    if (abs(row) < board_height && abs(col) < board_width) {
+      short int address = row * board_width + col;
+      tiles[address] ^= MARKED;
+
+      cout << "Toggled row: " << row;
+      cout << " and col: " << col;
+      cout << tiles[address] << endl;
       cout << endl << endl;
 
     }
