@@ -401,7 +401,7 @@ bool CheckGame() {
   for (int i = 0; i < board_height; i++) {
     for (int j = 0; j < board_width; j++) {
       index = i * board_width + j;
-      if (tiles[index] == INCLUDE) {
+      if (!(tiles[index] & EXCLUDE)) {
         t_sums[i] += board[index];
         t_sums[board_height + j] += board[index];
       }
