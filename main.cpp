@@ -429,7 +429,11 @@ main()
 
   cout << "Rullover" << endl;
 
+  #ifdef DEBUG_MODE
   srand(42);
+  #else
+  srand(time(NULL));
+  #endif
 
   SetBoard();
 
