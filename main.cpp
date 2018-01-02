@@ -293,12 +293,16 @@ void MarkTile(string cmd) {
           cout << endl;
           #endif
 
-          if (!(tiles[index] & MARKED)){
+          if ((!(tiles[index] & MARKED) && xor_operand != MARKED) ||
+              xor_operand == MARKED){
             #ifdef DEBUG_MODE
             cout << "tile is not marked" << endl;
             #endif
 
             tiles[index] ^= xor_operand;
+            cout << "Toggled row: " << i;
+            cout << " and col: " << col;
+            cout << endl << endl;
           }
         }
 
@@ -330,12 +334,16 @@ void MarkTile(string cmd) {
           cout << endl;
           #endif
 
-          if (!(tiles[index] & MARKED)){
+          if ((!(tiles[index] & MARKED) && xor_operand != MARKED) ||
+              xor_operand == MARKED){
             #ifdef DEBUG_MODE
             cout << "tile is not marked" << endl;
             #endif
 
             tiles[index] ^= xor_operand;
+            cout << "Toggled row: " << row;
+            cout << " and col: " << j;
+            cout << endl << endl;
           }
         }
 
@@ -350,11 +358,13 @@ void MarkTile(string cmd) {
 
     // At this point, both row and col are there so we proceed as normal.
     short int index = row * board_width + col;
-    
+    #ifdef DEBUG_MODE
     printf("Row: %d, Col: %d, Index: %d", row, col, index);
     cout << endl;
+    #endif
     
-    if (!(tiles[index] & MARKED)){
+    if ((!(tiles[index] & MARKED) && xor_operand != MARKED) ||
+        xor_operand == MARKED){
       if (abs(row) < board_height && abs(col) < board_width) {
         #ifdef DEBUG_MODE
         cout << "tile is not marked" << endl;
@@ -363,7 +373,6 @@ void MarkTile(string cmd) {
         cout << endl;
 
         tiles[index] ^= xor_operand;
-
         cout << "Toggled row: " << row;
         cout << " and col: " << col;
         cout << endl << endl;
