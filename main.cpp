@@ -249,11 +249,14 @@ void MarkTile(string cmd) {
     xor_operand = MARKED;
   }
 
-  int dash_position = cmd.find("-");
+  int dash_position = cmd.find("-", mark_position + 1);
 
   if (dash_position < cmd.size() && mark_position < cmd.size()) {
     string first = cmd.substr(mark_position + 1, dash_position);
     string second = cmd.substr(dash_position + 1, cmd.size());
+
+    // cout << "First part " << first;
+    // cout << " Second part " << second << endl;
 
     cout << endl;
 
@@ -278,7 +281,7 @@ void MarkTile(string cmd) {
 
     }
     else {
-      cout << "Invalid row or col number" << endl;
+      cout << "Can't understand the command." << endl;
       cout << endl << endl;
       return;
     }
