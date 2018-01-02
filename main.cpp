@@ -262,28 +262,69 @@ void MarkTile(string cmd) {
 
     int row;
     int col;
+
+    // Mark all column if row is missing.
     try {
       row = stod(first);
-      col = stod(second);
     } catch (const exception& x) {
-      cout << "Invalid row or col number" << endl;
-      cout << endl << endl;
-      return;
+      try {
+        col = stod(second);
+      } catch (exception& x) {
+        cout << "Can't understand the command." << endl;
+        cout << endl << endl;
+        return;
+      }
+      if (abs(col) < board_width) {
+        short int index;
+        for (int i = 0; i < board_height; i++) {
+          index = i * board_width + col;
+          if (!(tiles[index] & MARKED)){
+            tiles[index] ^= xor_operand;
+          }
+        }
+      } else {
+        cout << "Col number is out of bounds." << endl;
+        cout << endl << endl;
+        return;
+      }
     }
 
-    if (abs(row) < board_height && abs(col) < board_width) {
-      short int address = row * board_width + col;
-      tiles[address] ^= xor_operand;
-
-      cout << "Toggled row: " << row;
-      cout << " and col: " << col;
-      cout << endl << endl;
-
+    // Since no error is caught for row conversion above, we test col again.
+    // If it's missing, we mark the whole row.
+    try {
+      col = stod(second);
+    } catch(exception& x) {
+      if (abs(row) < board_height) {
+        short int index;
+        for (int j = 0; j < board_width; j++) {
+          index = row * board_width + j;
+          if (!(tiles[index] & MARKED)){
+            tiles[index] ^= xor_operand;
+          }
+        }
+      } else {
+        cout << "Row number is out of bounds." << endl;
+        cout << endl << endl;
+        return;
+      }
     }
-    else {
-      cout << "Can't understand the command." << endl;
-      cout << endl << endl;
-      return;
+
+    // At this point, both row and col are there so we proceed as normal.
+    short int index = row * board_width + col;
+    if (!(tiles[index] & MARKED)){
+      if (abs(row) < board_height && abs(col) < board_width) {
+        tiles[index] ^= xor_operand;
+
+        cout << "Toggled row: " << row;
+        cout << " and col: " << col;
+        cout << endl << endl;
+
+      }
+      else {
+        cout << "Row or col number is out of bounds." << endl;
+        cout << endl << endl;
+        return;
+      }
     }
   }
 }
