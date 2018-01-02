@@ -2,6 +2,9 @@
 #include <string>
 #include <cstdlib>
 
+#define DEBUG_MODE
+#undef DEBUG_MODE
+
 using namespace std;
 
 // Markings
@@ -255,8 +258,10 @@ void MarkTile(string cmd) {
     string first = cmd.substr(mark_position + 1, dash_position);
     string second = cmd.substr(dash_position + 1, cmd.size());
 
+    #ifdef DEBUG_MODE
     cout << "First part " << first;
     cout << " Second part " << second << endl;
+    #endif
 
     cout << endl;
 
@@ -275,19 +280,23 @@ void MarkTile(string cmd) {
         return;
       }
       if (abs(col) < board_width) {
-
+        #ifdef DEBUG_MODE
         cout << "Marking whole column " << col << endl;
+        #endif
 
         short int index;
         for (int i = 0; i < board_height; i++) {
           index = i * board_width + col;
-
+          
+          #ifdef DEBUG_MODE
           printf("Row: %d, Col: %d, Index: %d", i, col, index);
           cout << endl;
+          #endif
 
           if (!(tiles[index] & MARKED)){
-            
+            #ifdef DEBUG_MODE
             cout << "tile is not marked" << endl;
+            #endif
 
             tiles[index] ^= xor_operand;
           }
@@ -308,26 +317,30 @@ void MarkTile(string cmd) {
       col = stod(second);
     } catch(exception& x) {
       if (abs(row) < board_height) {
-
+        #ifdef DEBUG_MODE
         cout << "Marking whole row " << col << endl;
+        #endif
 
         short int index;
         for (int j = 0; j < board_width; j++) {
           index = row * board_width + j;
 
+          #ifdef DEBUG_MODE
           printf("Row: %d, Col: %d, Index: %d", row, j, index);
           cout << endl;
+          #endif
 
           if (!(tiles[index] & MARKED)){
-
+            #ifdef DEBUG_MODE
             cout << "tile is not marked" << endl;
+            #endif
 
             tiles[index] ^= xor_operand;
           }
         }
 
         return;
-        
+
       } else {
         cout << "Row number is out of bounds." << endl;
         cout << endl << endl;
@@ -343,8 +356,9 @@ void MarkTile(string cmd) {
     
     if (!(tiles[index] & MARKED)){
       if (abs(row) < board_height && abs(col) < board_width) {
-
+        #ifdef DEBUG_MODE
         cout << "tile is not marked" << endl;
+        #endif
 
         cout << endl;
 
