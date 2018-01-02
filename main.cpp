@@ -239,11 +239,11 @@ bool CheckCommand(string cmd, string input) {
 }
 
 void MarkTile(string cmd) {
-  int mark_position = cmd.find("*");
   short int xor_operand;
 
+  int mark_position = cmd.find("*");
   if (mark_position > cmd.size()) {
-    mark_position = cmd.find("+");
+    mark_position = cmd.find("-");
     xor_operand = EXCLUDE;
   } else {
     xor_operand = MARKED;
